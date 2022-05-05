@@ -11,7 +11,7 @@ const Search = () => {
   // using a callbackHook so that my async function does need to reintialize with every render #### that a soultion for react warning
   const searchBooksAPI = useCallback(async () => {
     if (query !== "") {
-      const res = await BooksAPI.search(query, 10);
+      const res = await BooksAPI.search(query);
       // handle API errors
       if (!res.error) {
         setBooks(res);
@@ -23,7 +23,11 @@ const Search = () => {
   // with every letter or any change in the search input i requsting the server
   useEffect(() => {
     searchBooksAPI();
-  }, [searchBooksAPI]);
+    if (query === "") {
+      console.log("query is " + query);
+      setBooks([]);
+    }
+  }, [searchBooksAPI, query]);
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -42,7 +46,7 @@ const Search = () => {
       </div>
       <div className="search-books-results">
         {/* check if there is books or not */}
-        {books.length > 0 ? (
+        {books.length > 0 && query !== "" ? (
           // SEARCHBOOK COMPONENT
           <SearchBooks books={books.length > 0 ? books : []} />
         ) : (

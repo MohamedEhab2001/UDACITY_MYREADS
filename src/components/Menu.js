@@ -32,7 +32,7 @@ const Menu = ({ title, options, book }) => {
 };
 Menu.propTypes = {
   title: propTypes.string.isRequired,
-  options: propTypes.object.isRequired,
+  options: propTypes.array.isRequired,
   book: propTypes.object.isRequired,
 };
 export default Menu;
