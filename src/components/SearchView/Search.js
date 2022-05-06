@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import debounce from "lodash.debounce";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "../../BooksAPI";
 import SearchBooks from "./SearchBooks";
@@ -20,14 +21,26 @@ const Search = () => {
       }
     }
   }, [query]);
+  // Function that handels the change
+  const onHandleChange = (e) => {
+    setQuery(e.target.value);
+  };
+  // Debounce the onHandleChange function to improve the performance and minimize the API requests
+  const debouncedResults = useMemo(() => {
+    return debounce(onHandleChange, 500);
+  }, []);
   // with every letter or any change in the search input i requsting the server
   useEffect(() => {
+    console.log("a time");
     searchBooksAPI();
     if (query === "") {
-      console.log("query is " + query);
       setBooks([]);
     }
-  }, [searchBooksAPI, query]);
+    return () => {
+      // clean up any side effects from debounce
+      debouncedResults.cancel();
+    };
+  }, [searchBooksAPI, debouncedResults, query]);
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -39,8 +52,7 @@ const Search = () => {
           <input
             type="text"
             placeholder="Search by title, author, or ISBN"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={debouncedResults}
           />
         </div>
       </div>
@@ -60,4 +72,3 @@ const Search = () => {
 };
 
 export default Search;
-//
