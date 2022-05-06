@@ -26,7 +26,7 @@ const Book = ({ book }) => {
     },
     {
       id: 4,
-      value: "none",
+      value: "None",
       text: "None",
     },
   ];

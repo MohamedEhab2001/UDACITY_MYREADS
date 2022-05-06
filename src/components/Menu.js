@@ -16,7 +16,7 @@ const Menu = ({ title, options, book }) => {
     getBooks();
   };
   return (
-    <select onChange={onHandleChange} defaultValue={book.shelf}>
+    <select onChange={onHandleChange} defaultValue={book.shelf || "None"}>
       <option value="none" disabled>
         {title}
       </option>
